@@ -1,0 +1,11 @@
+%sql
+-- Step 1: Create a new table with distinct rows to remove duplicates
+CREATE TABLE tps_custom.temp_unique_table AS
+SELECT DISTINCT *
+FROM hive_metastore.tps_custom.shopworks_budgets;
+-- Step 2: Overwrite the original table with deduplicated data
+INSERT OVERWRITE TABLE hive_metastore.tps_custom.shopworks_budgets
+SELECT * FROM tps_custom.temp_unique_table;
+
+-- Step 3: Drop the temporary table if no longer needed
+DROP TABLE IF EXISTS tps_custom.temp_unique_table;
